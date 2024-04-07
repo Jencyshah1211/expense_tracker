@@ -11,7 +11,7 @@ import pandas as pd
 # Declaring required configurations
 app = Flask(__name__)
 app.secret_key = "secret-key"
-app.config['SQLALCHEMY_DATABASE_URI'] ='mysql+mysqlconnector://trainee:Trainee%40123@testhodb2.nj:3306/test_schema'
+app.config['SQLALCHEMY_DATABASE_URI'] ='mysql+mysqlconnector://'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
