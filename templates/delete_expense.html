@@ -1,0 +1,58 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link rel="stylesheet" 
+href="{{url_for('static',filename='extended_beauty.css') }}"/>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#deleteForm").submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: "{{ url_for('confirm_delete', expenseid=expense.expenseid) }}",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            showFlashMessage("Expense Deleted Successfully!", 'danger');
+                            window.location.href = "{{ url_for('dashboard') }}";
+                        } else {
+                            showFlashMessage("Error: " + response.message, 'danger');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        showFlashMessage("AJAX Error: " + error, 'danger');
+                    }
+                });
+            });
+
+            function showFlashMessage(message, category) {
+                // Remove any existing flash messages
+                $(".flashMessage").remove();
+
+                // Create a new flash message element
+                var flashMessage = $('<div class="flashMessage alert alert-' + category + ' alert-dismissible fade show" role="alert">' +
+                                     message +
+                                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                     '<span aria-hidden="true">&times;</span></button></div>');
+
+                // Append the flash message to the top of the page
+                flashMessage.prependTo('body');
+                setTimeout(function() {
+                    flashMessage.alert('close');
+                }, 10000);
+            }
+        });
+    </script>
+{% endblock %} 
+{% block content %}
+    <h1>Delete Expense</h1>
+    <p>Are you sure you want to delete the expense?</p>
+    <form id="deleteForm" method="POST" action="{{ url_for('confirm_delete', expenseid=expense.expenseid) }}">
+        <button type="submit" class="btn btn-danger">Yes</button>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">No</a>
+    </form>
+{% endblock %}

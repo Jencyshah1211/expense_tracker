@@ -1,0 +1,159 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link rel="stylesheet" 
+href="{{url_for('static',filename='extended_beauty.css') }}"
+/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+            // Hide the canvas div initially
+            $("#result").hide();
+
+            // Function to handle form submission using AJAX
+            $("#uploadForm").submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData($(this)[0]);
+            $.ajax({
+                url: "/analysis",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (typeof response === 'object') {
+                        var labels = response.labels;
+                        var c_data = response.data;
+                        $("#result").show();
+                        createChart(labels, c_data);
+                    } else {
+                        console.error("Invalid response format:", response);
+                    }
+                }
+            });
+        });
+    });  
+    </script>
+
+<script>
+     function createChart(labels, c_data) {
+        var barCtx = document.getElementById('barChart');
+        if (barChart.chart) {
+            // Destroy the existing chart
+            barChart.chart.destroy();
+        }
+        var ctx = barCtx.getContext('2d');
+        barCtx.chart = new Chart(ctx, {
+            type:'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Value Counts of Expense_Category',
+                    data: c_data,
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgb(128, 0, 32, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgb(128, 0, 32, 1)'
+                ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x:{
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true 
+                    }
+                }
+            }
+        });
+        var pieCtx = document.getElementById('pieChart');
+        if (pieChart.chart) {
+            // Destroy the existing chart
+            pieChart.chart.destroy();
+        }
+        var ctx = pieCtx.getContext('2d');
+        pieCtx.chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label:'Pie-Chart',
+                    data: c_data,
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgb(128, 0, 32, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgb(128, 0, 32, 1)'
+                ],
+                    borderWidth: 1
+                }]
+            },
+            options:{
+            }
+        });
+    };
+</script>
+{% endblock %} {% block content %} 
+
+<div class="jumbotron jumbotron-fluid" style="background-color: #82acaf;">
+    <div class="container">
+        <form id="uploadForm" action="/analysis" method="post" enctype="multipart/form-data">
+            <a><h2>Select CSV File to upload:</h2></a>
+            <div class="col-md-4">
+                <div class="card" style= "margin-bottom: 1rem">
+                    <div class="card-body" style="background-color: #0d5977;">  
+                        <p class="card-text" style="color: #fdfdfd"><input class="form-control form-control-lg" type="file" name="file" id="file" accept=".csv"></p>
+                        <p class="card-text" style="color: #fdfdfd"><button type="submit" class="btn btn-primary">Upload File</button></p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>    
+</div>
+<div id="result" class="row">
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <p>Bar-Chart</p>
+            <canvas id="barChart" width="200" height="200"></canvas>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <p>Pie-Chart</p>
+            <canvas id="pieChart" width="200" height="200"></canvas>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

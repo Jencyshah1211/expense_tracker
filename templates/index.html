@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link rel="stylesheet" 
+href="{{url_for('static',filename='extended_beauty.css') }}"
+/>
+{% endblock %} {% block content %} 
+
+<h1> Welcome to your Expense Tracker, {{ name }}</h1>
+
+<div class="jumbotron jumbotron-fluid" style="background-color: #82acaf;">
+    <div class="container">
+      <h1>Category wise Sum</h1>
+      <ul>
+        <div class="row">
+        {% for category, total_amount in category_sums.items() %}
+            <div class="col-md-4">
+              <div class="card" style="width: 18rem; margin-bottom: 1rem">
+                <div class="card-body" style="background-color: #0d5977;">  
+                  <p class="card-text" style="color: #fdfdfd">{{ category }}: {{ total_amount }} {{ 'Rs.' }}</p>   
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+    </div>
+    </ul>
+    </div>
+</div>
+{% endblock %}

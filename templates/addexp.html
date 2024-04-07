@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link rel="stylesheet" 
+href="{{url_for('static',filename='extended_beauty.css') }}"/>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#expenseForm").submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: "/addexp",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            showFlashMessage("Expense Added Successfully!", 'success');
+                            $("#expenseForm")[0].reset();
+                        } else {
+                            showFlashMessage("Error: " + response.message, 'danger');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        showFlashMessage("AJAX Error: " + error, 'danger');
+                    }
+                });
+            });
+
+            function showFlashMessage(message, category) {
+                // Remove any existing flash messages
+                $(".flashMessage").remove();
+
+                // Create a new flash message element
+                var flashMessage = $('<div class="flashMessage alert alert-' + category + ' alert-dismissible fade show" role="alert">' +
+                                     message +
+                                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                     '<span aria-hidden="true">&times;</span></button></div>');
+
+                // Append the flash message to the top of the page
+                flashMessage.prependTo('body');
+                setTimeout(function() {
+                    flashMessage.alert('close');
+                }, 5000);
+            }
+        });
+    </script>
+{% endblock %} 
+{% block content %} 
+<h1>Add Expense</h1>
+<div class="col-md-4 col-md-offset-4"> 
+    <form id="expenseForm" method="POST" action="/addexp">
+    
+        <div class="form-group">
+            <label for="expense_description">Expense Description</label>
+            <input 
+             type="text" class="form-control" required
+             id="expense_description" name="expense_description"
+             placeholder="Enter a short Description">
+          </div>
+    
+        <div class="form-group">
+            <label for="expense_amount">Enter Expense Amount:</label>
+            <input type="number" id="expense_amount" name="expense_amount" placeholder="Enter Expense Amount" required>
+        </div>
+    
+        <div class="form-group" aria-labelledby="btnGroupDrop1">
+            <label for="expense_category">Choose Expense category</label>
+        <select id="expense_category" name="expense_category" placeholder="category" required>
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>           
+    </div>
+
+        <button type="submit" class="btn btn-primary">Add Expense</button>
+        <button type="reset" class="btn btn-danger">Reset</button>
+      </form>
+    </div>
+{% endblock %}
