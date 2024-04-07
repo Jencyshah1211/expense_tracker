@@ -1,0 +1,89 @@
+h1,
+h2,
+h4,
+p {
+  font-family: "Arvo", serif;
+}
+
+p {
+  font-size: 17px;
+}
+
+#intro {
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+}
+
+#logincontent{
+  margin: 0 auto;
+  height: 500px;
+  width: 400px;
+  background-color: #e6fcff; 
+  border-radius: 10px;
+}
+
+#registercontent{
+  margin: 0 auto;
+  height: 720px;
+  width: 400px;
+  background-color: #c3dfcc; 
+  border-radius: 10px;
+}
+
+#logintop{
+  height: 60px;
+  width: 400px;
+  background-color: #da690c; 
+  color: #ffffff;
+}
+
+#registertop{
+  height: 60px;
+  width: 400px;
+  background-color: #f1dcf3; 
+  color: #ffffff;
+}
+
+#textbox{
+  padding: 10px 40px;
+  background-color: #d1ce02; 
+  border-radius: 10px;
+}
+
+#btn {
+  padding: 10px 40px;
+  background-color: #008f99; 
+  color: #FFFFFF;
+  font-style: oblique;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+#worddark{
+  color: #007599;
+  font-style: oblique;
+  font-weight: bold;
+}
+
+#wordlight{
+  color: #FFFFFF;
+  font-style: oblique;
+  font-weight: bold;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+#one{
+  display: flex;
+  position: relative;
+}
+
